@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEATHER APP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="enter the city name" spellcheck="false">
+            <button><img src="https://static.vecteezy.com/system/resources/previews/015/337/677/original/transparent-search-icon-free-png.png"></button>
+        </div>
+        <div class="error">
+            <p>Invalid city name</p>
+        </div>
+        <div class="weather">
+            <img src="http://purepng.com/public/uploads/large/purepng.com-weather-iconsymbolsiconsapple-iosiosios-8-iconsios-8-721522596142qx4ep.png" width="200px" class="weather-icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">hyderabad</h2>       
+            <div class="details">
+               <div class="col">
+                <img src="https://tse2.mm.bing.net/th?id=OIP.1ZYsx909iSElh13IuNwEPAHaHa&pid=Api&P=0&h=220">
+                <div>
+                  <p class="humidity">50%</p>
+                  <p>Humidity</p>
+                </div>
+            </div>
+            <div class="col">
+               <img src="https://png.pngtree.com/png-vector/20190411/ourlarge/pngtree-vector-wind-icon-png-image_924484.jpg">
+               <div>
+                 <p class="wind">150 kmph</p>
+                 <p>wind speed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const apikey="3a5d953b8a9c890cdcb0fe099f054313";
+        const apiurl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchbox=document.querySelector(".search input");
+        const searchbtn=document.querySelector(".search button");
+        const weathericon=document.querySelector(".weather-icon");
+
+        async function checkWeather(city){
+            const response=await fetch(apiurl +city+ `&appid=${apikey}`);
+            if(response.status == 404){
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".weather").style.display = "none";
+            }
+            else{
+                 var data=await response.json();
+                 document.querySelector(".city").innerHTML=data.name;
+            document.querySelector(".temp").innerHTML=Math.round(data.main.temp) +"°C";
+            document.querySelector(".humidity").innerHTML=data.main.humidity +"%";
+            document.querySelector(".wind").innerHTML=data.wind.speed +"km/h";
+            if(data.weather[0].main == "Clouds"){
+                weathericon.src="https://cdn1.iconfinder.com/data/icons/hawcons/32/700118-icon-20-clouds-1024.png";
+            }
+            else if(data.weather[0].main == "Clear"){
+                weathericon.src="https://tse2.mm.bing.net/th?id=OIP.957We5Hc5SV7yDsh4ckMGQHaHa&pid=Api&P=0&h=220";
+            }
+            else if(data.weather[0].main == "Rain"){
+                weathericon.src="hhttps://tse3.mm.bing.net/th?id=OIP.IKUnuKlxdjmUM9fJmYJLVgHaHa&pid=Api&P=0&h=220";
+            }
+            else if(data.weather[0].main == "Drizzle"){
+                weathericon.src="https://cdn1.iconfinder.com/data/icons/weather-flat-8/50/Weather_Flat-29-1024.png";
+            }
+            else if(data.weather[0].main == "Mist"){
+                weathericon.src="https://cdn-icons-png.flaticon.com/512/4005/4005901.png";
+            }
+            else if(data.weather[0].main == "Haze"){
+                weathericon.src="https://cdn1.iconfinder.com/data/icons/weather-471/128/HAZE-1024.png";
+            }
+
+            document.querySelector(".weather").style.display = "block";
+            document.querySelector(".error").style.display = "none";
+
+        }
+    }
+searchbtn.addEventListener("click",()=>{
+         checkWeather(searchbox.value);
+})
+    </script>
+    
+</body>
+</html>
